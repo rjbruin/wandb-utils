@@ -1,4 +1,5 @@
-"""Clean up artifacts from specified W&B project.
+"""Clean up artifacts from specified W&B project. Removes all "model" type
+artifacts that are not tagged as "latest" or "best".
 
 Usage:
     cleanup_artifacts.py <entity> <project> [--dry-run]
