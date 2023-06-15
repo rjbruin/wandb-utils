@@ -2,10 +2,11 @@
 artifacts that are not tagged with any alias.
 
 Usage:
-    cleanup_artifacts.py <entity> <project> [--dry-run]
+    cleanup_artifacts.py <entity> <project> [options]
 
 Options:
     --dry-run   Don't apply changes.
+    --all       Remove all artifacts, including last and/or best models.
 """
 import wandb
 import tqdm
@@ -28,7 +29,7 @@ def main(args):
             # if "latest" not in version.aliases and \
             #    "best" not in version.aliases and \
             #    "best_k" not in version.aliases:
-            if len(version.aliases) == 0:
+            if args['--all'] or len(version.aliases) == 0:
                 if not args['--dry-run']:
                     version.delete(delete_aliases=True)
 
@@ -36,10 +37,11 @@ def main(args):
                     removed[model.name] = 0
                 removed[model.name] += 1
 
+    condition = " that were not \"latest\" or \"best\"" if not args['--all'] else ""
     if not args['--dry-run']:
-        print(f"Removed model versions that were not \"latest\" or \"best\":")
+        print(f"Removed model versions{condition}:")
     else:
-        print(f"Found model versions that were not \"latest\" or \"best\":")
+        print(f"Found model versions{condition}:")
     for key in removed:
         print(f"  {key}: {removed[key]}")
 
